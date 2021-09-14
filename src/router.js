@@ -4,6 +4,7 @@ import Main from './views/Main';
 import DashboardAdmin from './views/dashboard/Admin';
 import DashboardFront from './views/dashboard/Front';
 import AnalysisXView from './views/analysis/XView';
+import AnalysisUser from './views/analysis/User';
 import StatisticsDaily from './views/statistics/Daily';
 import Report from './views/Report';
 import Setting from './views/Setting';
@@ -34,6 +35,10 @@ export default new VueRouter({
                 {
                     path: 'xview',
                     component: AnalysisXView,
+                },
+                {
+                    path: 'user',
+                    component: AnalysisUser,
                 },
             ],
         },

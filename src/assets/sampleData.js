@@ -29,6 +29,15 @@ export const analysisMenus = [
         description: null,
         displayName: 'X-View',
     },
+    {
+        key: '/analysis/user',
+        name: 'User',
+        type: 'analysis',
+        url: '/analysis/user',
+        imageUrl: '/images/analysis.png',
+        description: null,
+        displayName: '사용자 분석',
+    },
 ];
 
 export const statisticsMenus = [

@@ -43,6 +43,7 @@
     "webpack-merge": "^5.0.9"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "d3-scale": "^4.0.0",
     "dayjs": "^1.10.4",
     "dayjs-plugin-utc": "^0.1.2",
