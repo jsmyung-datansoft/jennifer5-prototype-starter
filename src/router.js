@@ -1,9 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Main from './views/Main';
-import DashboardAdmin from './views/dashboard/Admin';
-import DashboardFront from './views/dashboard/Front';
-import AnalysisXView from './views/analysis/XView';
+import DashboardAIMetrics from './views/dashboard/AIMetrics';
 import AnalysisUser from './views/analysis/User';
 import StatisticsDaily from './views/statistics/Daily';
 import Report from './views/Report';
@@ -19,12 +17,8 @@ export default new VueRouter({
             component: { template: '<router-view />' },
             children: [
                 {
-                    path: 'realtimeAdmin',
-                    component: DashboardAdmin,
-                },
-                {
-                    path: 'realtimeAdmin_front',
-                    component: DashboardFront,
+                    path: 'ai/metrics',
+                    component: DashboardAIMetrics,
                 },
             ],
         },
@@ -32,10 +26,6 @@ export default new VueRouter({
             path: '/analysis',
             component: { template: '<router-view />' },
             children: [
-                {
-                    path: 'xview',
-                    component: AnalysisXView,
-                },
                 {
                     path: 'user',
                     component: AnalysisUser,

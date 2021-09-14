@@ -87,10 +87,18 @@ export default {
             if (state.selectedOne)
                 commit('selectDomain', state.selectedOne.treeIndex);
         },
-        async fetchDomains({ commit }) {
+        async fetchDomains({ commit, state }) {
             const { data } = await axios.get('/api/domains/');
-            commit('updateDomainList', data)
-            commit('selectDomain', "0");
+            commit('updateDomainList', data);
+
+            let currentTreeIndex = (
+                window.localStorage.getItem('selectedDomainGroupIndex') || ''
+            ).replace(/\"/g, '');
+            if (state.domainList && !state.domainList.some(d => d.treeIndex === currentTreeIndex)) {
+                currentTreeIndex = state.domainList[0] ? state.domainList[0].treeIndex : '0';
+            }
+            
+            commit('selectDomain', currentTreeIndex);
         },
     },
 };

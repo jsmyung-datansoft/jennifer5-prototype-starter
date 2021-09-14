@@ -1,34 +1,16 @@
 export const dashboardMenus = [
     {
-        key: '/dashboard/realtimeAdmin',
-        name: '시스템 관리자',
+        key: '/dashboard/ai/metrics',
+        name: 'Metrics 예측',
         type: 'dashboard',
-        url: '/dashboard/realtimeAdmin',
+        url: '/dashboard/ai/metrics',
         imageUrl: '/images/dashboard.png',
         description: null,
-        displayName: '시스템 관리자',
-    },
-    {
-        key: '/dashboard/realtimeAdmin_front',
-        name: 'Front 통합 대시보드',
-        type: 'dashboard',
-        url: '/dashboard/realtimeAdmin_front',
-        imageUrl: '/images/dashboard.png',
-        description: null,
-        displayName: 'Front 통합 대시보드',
+        displayName: 'Metrics 예측',
     },
 ];
 
 export const analysisMenus = [
-    {
-        key: '/analysis/xview',
-        name: 'X-View',
-        type: 'analysis',
-        url: '/analysis/xview',
-        imageUrl: '/images/analysis.png',
-        description: null,
-        displayName: 'X-View',
-    },
     {
         key: '/analysis/user',
         name: 'User',
