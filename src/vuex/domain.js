@@ -1,4 +1,5 @@
 import { getAllChildren } from '@vuejs/component/resource/tree/treeAction';
+import { DomainGroupManager } from '@common/legacy/DomainGroupManager';
 import { LocalStorageManager } from '@common/legacy/LocalStorageManager';
 
 import axios from "./axios";
@@ -10,11 +11,21 @@ let currentTreeIndex = (
 ).replace(/\"/g, '');
 if (!domainList.some(d => d.treeIndex === currentTreeIndex)) {
     currentTreeIndex = domainList[0] ? domainList[0].treeIndex : '0';
+} else {
+    // 선택한 정보 저장
+    DomainGroupManager.setSelectedItem(currentTreeIndex);
 }
 
 function selectDomainMutationLogic(state, domainTreeIndex, noCache = false) {
     let selectedIndex = domainTreeIndex;
     const { multiDomainFlag, domainList } = state;
+
+    // 도메인 그룹 정보에서 onlyOne 설정이 되면 순수하게 domain 만 선택할 수 있다.
+    if (DomainGroupManager.isOnlyOne()) {
+        selectedIndex = DomainGroupManager.getSelectedIndexForDomain(
+            selectedIndex
+        );
+    }
 
     // 트리 재선택
     let selectedOne =
@@ -43,7 +54,6 @@ function selectDomainMutationLogic(state, domainTreeIndex, noCache = false) {
 export default {
     namespaced: true,
     state: {
-        useDomainGroup: true,
         multiDomainFlag: true,
         domainList,
         selectedOne: domainList.find(d => d.treeIndex === currentTreeIndex),
@@ -91,11 +101,16 @@ export default {
             const { data } = await axios.get('/api/domains/');
             commit('updateDomainList', data);
 
-            let currentTreeIndex = (
+            DomainGroupManager.init(data.map(x => x.data));
+
+            currentTreeIndex = (
                 window.localStorage.getItem('selectedDomainGroupIndex') || ''
             ).replace(/\"/g, '');
             if (state.domainList && !state.domainList.some(d => d.treeIndex === currentTreeIndex)) {
                 currentTreeIndex = state.domainList[0] ? state.domainList[0].treeIndex : '0';
+            } else {
+                // 선택한 정보 저장
+                DomainGroupManager.setSelectedItem(currentTreeIndex);
             }
             
             commit('selectDomain', currentTreeIndex);
