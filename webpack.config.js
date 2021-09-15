@@ -1,4 +1,6 @@
 const path = require("path");
+const webpack = require("webpack");
+const dotenv = require('dotenv');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
@@ -11,102 +13,113 @@ const commonPath = path.resolve(__dirname, "packages/common");
 const stylePath = path.resolve(__dirname, "packages/style");
 const vuejsPath = path.resolve(__dirname, "packages/vuejs");
 
-module.exports = {
-  mode: "development",
-  devtool: "cheap-module-eval-source-map",
-  entry: path.resolve(__dirname, "src/index"),
-  output: {
-    path: outputPath,
-    filename: "[name].js"
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(jpe?g|png|gif|svg|ico|ttf|eot|woff|woff2)$/i,
-        use: [
-          {
-            loader: "url-loader",
-            options: {
-              limit: 1024 * 1024
-            }
-          }
-        ]
-      },
-      {
-        test: /\.js$/,
-        exclude: /(node_modules)/,
-        use: [
-          {
-            loader: "babel-loader"
-          }
-        ]
-      },
-      {
-        test: /\.(css)$/,
-        use: [{ loader: MiniCssExtractPlugin.loader }, { loader: "css-loader" }]
-      },
-      {
-        test: /\.s[a|c]ss$/,
-        use: [
-          { loader: MiniCssExtractPlugin.loader },
-          { loader: "css-loader" },
-          { loader: "sass-loader" }
-        ]
-      },
-      {
-        test: /\.vue$/,
-        use: [
-          { loader: "vue-loader" },
-          {
-            loader: "vue-svg-inline-loader",
-            options: {
-              removeAttributes: ["alt", "src", "tabindex"],
-              svgo: {
-                plugins: [
-                  { prefixIds: true },
-                  { removeViewBox: false },
-                  {
-                    removeAttrs: {
-                      attrs: "(fill|stroke)"
-                    }
-                  }
-                ]
+module.exports = (env, options) => {
+  dotenv.config({
+    path: `.env.${options.api || 'development'}`
+  });
+
+  return {
+    mode: "development",
+    devtool: "cheap-module-eval-source-map",
+    entry: path.resolve(__dirname, "src/index"),
+    output: {
+      path: outputPath,
+      filename: "[name].js"
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(jpe?g|png|gif|svg|ico|ttf|eot|woff|woff2)$/i,
+          use: [
+            {
+              loader: "url-loader",
+              options: {
+                limit: 1024 * 1024
               }
             }
-          }
-        ]
-      }
-    ]
-  },
-  resolve: {
-    alias: {
-      vue$: "vue/dist/vue.esm.js",
-      "@library": libraryPath,
-      "@layout": layoutPath,
-      "@common": commonPath,
-      "@vuejs": vuejsPath,
-      "@style": stylePath
+          ]
+        },
+        {
+          test: /\.js$/,
+          exclude: /(node_modules)/,
+          use: [
+            {
+              loader: "babel-loader"
+            }
+          ]
+        },
+        {
+          test: /\.(css)$/,
+          use: [{ loader: MiniCssExtractPlugin.loader }, { loader: "css-loader" }]
+        },
+        {
+          test: /\.s[a|c]ss$/,
+          use: [
+            { loader: MiniCssExtractPlugin.loader },
+            { loader: "css-loader" },
+            { loader: "sass-loader" }
+          ]
+        },
+        {
+          test: /\.vue$/,
+          use: [
+            { loader: "vue-loader" },
+            {
+              loader: "vue-svg-inline-loader",
+              options: {
+                removeAttributes: ["alt", "src", "tabindex"],
+                svgo: {
+                  plugins: [
+                    { prefixIds: true },
+                    { removeViewBox: false },
+                    {
+                      removeAttrs: {
+                        attrs: "(fill|stroke)"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
-    extensions: [".js", ".sass", ".scss", ".css", ".vue"]
-  },
-  devServer: {
-    contentBase: path.join(__dirname, "public"),
-    host: "127.0.0.1",
-    port: 3000,
-    progress: true,
-    inline: true,
-    hot: false
-  },
-  plugins: [
-    new VueLoaderPlugin(),
-    new HtmlWebPackPlugin({
-      template: path.resolve(__dirname, "src/index.html"),
-      filename: "./index.html"
-    }),
-    new MiniCssExtractPlugin({
-      path: outputPath,
-      filename: "[name].css"
-    }),
-    new CaseSensitivePathsPlugin()
-  ]
+    resolve: {
+      alias: {
+        vue$: "vue/dist/vue.esm.js",
+        "@library": libraryPath,
+        "@layout": layoutPath,
+        "@common": commonPath,
+        "@vuejs": vuejsPath,
+        "@style": stylePath
+      },
+      extensions: [".js", ".sass", ".scss", ".css", ".vue"]
+    },
+    devServer: {
+      contentBase: path.join(__dirname, "public"),
+      host: "127.0.0.1",
+      port: 3000,
+      progress: true,
+      inline: true,
+      hot: false
+    },
+    plugins: [
+      new VueLoaderPlugin(),
+      new HtmlWebPackPlugin({
+        template: path.resolve(__dirname, "src/index.html"),
+        filename: "./index.html"
+      }),
+      new MiniCssExtractPlugin({
+        path: outputPath,
+        filename: "[name].css"
+      }),
+      new CaseSensitivePathsPlugin(),
+  
+      // 환경 변수 등록/관리 설정
+      new webpack.DefinePlugin({
+        'process.env.API_URL': JSON.stringify(process.env.API_URL)
+      }), 
+    ]
+  };
 };
